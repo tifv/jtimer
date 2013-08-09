@@ -3,6 +3,8 @@ from functools import partial
 
 from .common import CommonTimerApp
 
+raise AssertionError("Tkinter version is broken.")
+
 class TkTimerApp(CommonTimerApp):
     def __init__(self, timer, precision, title='timer'):
         super().__init__(timer, precision)

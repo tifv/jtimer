@@ -4,10 +4,20 @@ class CommonTimerApp:
     def __init__(self, timer, precision):
         self.timer = timer
         self.precision = precision
+        self.living = True
+
+    def remained(self):
+        if not self.living:
+            return 0.0
+        remained = self.timer.remained()
+        if remained <= 0.0:
+            self.living = False
+            return 0.0
+        return remained
 
     def output_remained(self):
         """Print remained time on stdout."""
-        remained = self.timer.remained()
+        remained = self.remained()
         print('Remained: ' + self.format_remained(remained))
 
     def format_remained(self, remained):

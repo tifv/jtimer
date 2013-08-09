@@ -19,7 +19,7 @@ def main(minutes, precision=0, flavour='regular', ui='gtk', immediate=False):
         raise ValueError(ui)
     app = TimerApp(Timer(seconds), precision, title=title)
     if immediate:
-        app.start_timer()
+        app.toggle_timer()
     app.mainloop()
 
 def set_terminal_caption(caption=None):
