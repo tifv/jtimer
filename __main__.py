@@ -15,6 +15,8 @@ if __name__ == '__main__':
         action='store_true',
         help='Start timer immediately')
 
+    parser.add_argument('-f', '--font-size', type=float, default=100)
+
     flavour_group = parser.add_mutually_exclusive_group()
     flavour_group.add_argument('-P', '--poisson',
         action='store_const', dest='flavour', const='poisson',
@@ -24,10 +26,10 @@ if __name__ == '__main__':
         help='Wiener timer' )
     parser.set_defaults(flavour='regular')
 
-    ui_group = parser.add_mutually_exclusive_group()
-    ui_group.add_argument('--tk',
-        action='store_const', dest='ui', const='tk')
-    parser.set_defaults(ui='gtk')
+#    ui_group = parser.add_mutually_exclusive_group()
+#    ui_group.add_argument('--tk',
+#        action='store_const', dest='ui', const='tk')
+#    parser.set_defaults(ui='gtk')
 
     args = parser.parse_args()
     if (args.precision < 0):

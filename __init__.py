@@ -1,4 +1,4 @@
-def main(minutes, precision=0, flavour='regular', ui='gtk', immediate=False):
+def main(minutes, precision=0, flavour='regular', ui='gtk', immediate=False, font_size=100):
     seconds = minutes * 60
     if flavour == 'regular':
         from .core.regular import RegularTimer as Timer
@@ -17,7 +17,7 @@ def main(minutes, precision=0, flavour='regular', ui='gtk', immediate=False):
         from .ui.gtk import GtkTimerApp as TimerApp
     else:
         raise ValueError(ui)
-    app = TimerApp(Timer(seconds), precision, title=title)
+    app = TimerApp(Timer(seconds), precision, title=title, font_size=font_size)
     if immediate:
         app.toggle_timer()
     app.mainloop()

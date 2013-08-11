@@ -3,13 +3,14 @@ from gi.repository import Gtk, GObject
 from .common import CommonTimerApp
 
 class GtkTimerApp(CommonTimerApp):
-    def __init__(self, timer, precision, title='timer'):
+    def __init__(self, timer, precision, title='timer', font_size=100):
         super().__init__(timer, precision)
 
         self.master = Gtk.Window(title=title)
         self.label = Gtk.Label()
         self.master.connect('delete-event', self.force_quit)
         self.master.add(self.label)
+        self.label_font_size = int(1000 * font_size)
 
         self.control_master = Gtk.Window(
             title=title+' (control)',
@@ -69,6 +70,6 @@ class GtkTimerApp(CommonTimerApp):
 
     def set_markup(self, label, colour='black'):
         self.label.set_markup(
-            '<span font_size="100000" foreground="{colour}">{label}</span>'
-            .format(label=label, colour=colour) )
+            '<span font_size="{size}" foreground="{colour}">{label}</span>'
+            .format(label=label, colour=colour, size=self.label_font_size) )
 
