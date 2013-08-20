@@ -15,6 +15,20 @@ class CommonTimerApp:
             return 0.0
         return remained
 
+    def interact(self):
+        if self.living:
+            self.toggle_timer()
+        else:
+            self.shutdown_ui()
+
+    def toggle_timer(self):
+        self.timer.toggle_timer()
+
+    def quit(self):
+        if self.living:
+            self.output_remained()
+        self.shutdown_ui()
+
     def output_remained(self):
         """Print remained time on stdout."""
         remained = self.remained()
@@ -35,6 +49,4 @@ class CommonTimerApp:
         return '{0:0=2d}:{1:0=2d}.{2:0={precision}d}'.format(
             minutes, seconds, subseconds,
             precision=self.precision )
-
-
 

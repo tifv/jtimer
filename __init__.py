@@ -1,26 +1,27 @@
-def main(minutes, precision=0, flavour='regular', ui='gtk', immediate=False, font_size=100):
-    seconds = minutes * 60
+def main(*, seconds, precision=0, flavour, ui, immediate, font_size):
     if flavour == 'regular':
-        from .core.regular import RegularTimer as Timer
+        from .core import TimerCore as FlavourTimerCore
         title = 'Regular timer'
     elif flavour == 'poisson':
-        from .core.poisson import PoissonTimer as Timer
+        from .flavour.poisson import PoissonTimerCore as FlavourTimerCore
         title = 'Poisson timer'
     elif flavour == 'wiener':
-        from .core.wiener import WienerTimer as Timer
+        from .flavour.wiener import WienerTimerCore as FlavourTimerCore
         title = 'Wiener timer'
     else:
         raise ValueError(flavour)
-    if ui == 'tk':
-        from .ui.tk import TkTimerApp as TimerApp
-    elif ui == 'gtk':
-        from .ui.gtk import GtkTimerApp as TimerApp
+    if ui == 'gtk':
+        from .ui.gtk import GtkTimerCore as UITimerCore
+    elif ui == 'qt':
+        from .ui.qt import QtTimerCore as UITimerCore
     else:
         raise ValueError(ui)
-    app = TimerApp(Timer(seconds), precision, title=title, font_size=font_size)
+    class TheTimerCore(UITimerCore, FlavourTimerCore):
+        pass
+    core = TheTimerCore(seconds, precision, title=title, font_size=font_size)
     if immediate:
-        app.toggle_timer()
-    app.mainloop()
+        core.start()
+    core.mainloop()
 
 def set_terminal_caption(caption=None):
     import sys
