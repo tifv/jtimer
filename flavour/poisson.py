@@ -4,9 +4,10 @@ from random import uniform
 from ..core import TimerCore
 
 class PoissonTimerCore(TimerCore):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.remained = int(self.remained)
+    def __init__(self, seconds, precision, *args, **kwargs):
+        seconds = int(seconds)
+        assert precision == 0
+        super().__init__(seconds, precision, *args, **kwargs)
 
     def update_time(self):
         passed_time = self.time() - self.registered_time

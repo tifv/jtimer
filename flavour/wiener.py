@@ -4,9 +4,9 @@ from random import normalvariate
 from ..core import TimerCore
 
 class WienerTimerCore(TimerCore):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.remained = sqrt(self.remained)
+    def __init__(self, seconds, *args, **kwargs):
+        seconds = sqrt(seconds)
+        super().__init__(seconds, *args, **kwargs)
 
     def get_remained(self):
         remained = super().get_remained()

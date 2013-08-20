@@ -3,9 +3,7 @@ from PyQt4 import QtGui, QtCore
 from ..core import TimerCore
 
 class QtTimerCore(TimerCore):
-    def __init__(self, *args, title='timer', font_size=100, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def __init__(self, *args, title, font_size, **kwargs):
         self.qapp = QtGui.QApplication([])
 
         self.master = MasterWindow()
@@ -36,21 +34,14 @@ class QtTimerCore(TimerCore):
         self.control.setLayout(control_layout)
 
         self.master.timer_callback = self.update
-        self.update_label()
 
         self.master.show()
         self.control.show()
 
-    def start(self):
-        super().start()
-        self.start_timeout()
+        super().__init__(*args, **kwargs)
 
     def start_timeout(self):
         self.timer_id = self.master.startTimer(25)
-
-    def pause(self):
-        super().pause()
-        self.stop_timeout()
 
     def stop_timeout(self):
         self.master.killTimer(self.timer_id)
@@ -61,11 +52,9 @@ class QtTimerCore(TimerCore):
     def shutdown(self):
         return self.qapp.quit()
 
-    def show_remained(self, remained):
-        self.label.setText(self.format_remained(remained))
-        if remained > 0.0:
-            pass
-        else:
+    def set_label_text(self, text, finished=False):
+        self.label.setText(text)
+        if finished:
             self.label.setStyleSheet('QLabel { color : red; }')
 
 class Window(QtGui.QWidget):

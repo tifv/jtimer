@@ -1,4 +1,4 @@
-def main(*, seconds, precision=0, flavour, ui, immediate, font_size):
+def main(*, seconds, precision, flavour, ui, immediate, font_size):
     if flavour == 'regular':
         from .core import TimerCore as FlavourTimerCore
         title = 'Regular timer'
@@ -14,6 +14,8 @@ def main(*, seconds, precision=0, flavour, ui, immediate, font_size):
         from .ui.gtk import GtkTimerCore as UITimerCore
     elif ui == 'qt':
         from .ui.qt import QtTimerCore as UITimerCore
+    elif ui == 'tk':
+        from .ui.tk import TkTimerCore as UITimerCore
     else:
         raise ValueError(ui)
     class TheTimerCore(UITimerCore, FlavourTimerCore):

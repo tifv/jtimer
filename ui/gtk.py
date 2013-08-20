@@ -3,9 +3,7 @@ from gi.repository import Gtk, GObject
 from ..core import TimerCore
 
 class GtkTimerCore(TimerCore):
-    def __init__(self, *args, title='timer', font_size=100, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def __init__(self, *args, title, font_size, **kwargs):
         def close_handler(widget, event):
             self.close()
         def clicked_handler(widget):
@@ -17,25 +15,22 @@ class GtkTimerCore(TimerCore):
         self.master.add(self.label)
         self.label_font_size = int(1000 * font_size)
 
-        self.control_master = Gtk.Window(
+        self.control = Gtk.Window(
             title=title + ' (control)',
             default_width=150, default_height=150
         )
-        self.control_master.connect('delete-event', close_handler)
+        self.control.connect('delete-event', close_handler)
         self.button = Gtk.Button()
         self.button.set_label('Start/Pause')
         self.button.connect('clicked', clicked_handler)
-        self.control_master.add(self.button)
+        self.control.add(self.button)
 
         self.timeout_id = None
-        self.update_label()
 
         self.master.show_all()
-        self.control_master.show_all()
+        self.control.show_all()
 
-    def start(self):
-        super().start()
-        self.start_timeout()
+        super().__init__(*args, **kwargs)
 
     def start_timeout(self):
         assert self.timeout_id is None
@@ -43,10 +38,6 @@ class GtkTimerCore(TimerCore):
             self.update()
             return True # continue timeout
         self.timeout_id = GObject.timeout_add(25, timeout_call)
-
-    def pause(self):
-        super().pause()
-        self.stop_timeout()
 
     def stop_timeout(self):
         assert self.timeout_id is not None
@@ -59,12 +50,11 @@ class GtkTimerCore(TimerCore):
     def shutdown(self):
         Gtk.main_quit()
 
-    def show_remained(self, remained):
-        self.set_label_markup(self.format_remained(remained),
-            colour='black' if remained > 0.0 else 'red' )
-
-    def set_label_markup(self, label, colour='black'):
+    def set_label_text(self, text, finished=False):
         self.label.set_markup(
-            '<span font_size="{size}" foreground="{colour}">{label}</span>'
-            .format(label=label, colour=colour, size=self.label_font_size) )
+            '<span font_size="{size}" foreground="{colour}">{text}</span>'
+            .format(text=text,
+                colour='black' if not finished else 'red',
+                size=self.label_font_size )
+        )
 

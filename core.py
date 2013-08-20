@@ -9,6 +9,8 @@ class TimerCore:
 
         self.state = 'paused'
 
+        self.update_label()
+
     def time(self):
         return time()
 
@@ -19,12 +21,15 @@ class TimerCore:
             self.start()
         elif self.state in {'exhausted'}:
             self.shutdown()
+        elif self.state in {'shutdown'}:
+            raise AssertionError
 
     def close(self):
         try:
             if self.state in {'running', 'paused'}:
                 self.print_remained()
         finally:
+            self.state = 'shutdown'
             self.shutdown()
 
     def update(self):
@@ -34,7 +39,8 @@ class TimerCore:
             self.stop_timeout()
 
     def update_label(self):
-        self.show_remained(self.get_remained())
+        remained = self.get_remained()
+        self.set_label_text(self.format_remained(remained), finished=remained <= 0.0)
 
     def get_remained(self):
         if self.state in {'running'}:
@@ -48,16 +54,20 @@ class TimerCore:
             return self.remained
         if self.state in {'exhausted'}:
             return 0.0
+        if self.state in {'shutdown'}:
+            raise AssertionError
 
     def start(self):
         assert self.state in {'paused'}
         assert self.remained > 0.0
         self.registered_time = self.time()
         self.state = 'running'
+        self.start_timeout()
 
     def pause(self):
         assert self.state in {'running'}
         self.update_time()
+        self.stop_timeout()
         if self.remained <= 0.0:
             self.state = 'exhausted'
         else:
@@ -95,5 +105,12 @@ class TimerCore:
     def shutdown(self):
         raise NotImplementedError
 
-    def show_remained(self, remained):
+    def set_label_text(self, text, finished=False):
         raise NotImplementedError
+
+    def start_timeout(self):
+        raise NotImplementedError
+
+    def stop_timeout(self):
+        raise NotImplementedError
+
