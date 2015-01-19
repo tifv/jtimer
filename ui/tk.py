@@ -12,7 +12,7 @@ class TkTimerCore(TimerCore):
         self.master = Tk()
         self.master.wm_title(title)
         self.master.bind('<Destroy>', close_handler)
-        self.label = Label(self.master, font='Sans {}'.format(font_size))
+        self.label = Label(self.master, font='Sans {}'.format(int(font_size)))
         self.label.pack(expand=True)
 
         self.control = Toplevel()
@@ -30,8 +30,8 @@ class TkTimerCore(TimerCore):
     def start_timeout(self):
         assert self.timeout_running is False
         def timeout_call():
-            self.update()
             if self.timeout_running:
+                self.update()
                 self.master.after(25, timeout_call)
         self.timeout_running = True
         timeout_call()
